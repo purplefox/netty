@@ -255,7 +255,9 @@ public class NioWorker implements Runnable {
                         }
                     } else {
                         // Give one more second.
-                        shutdown = true;
+                      //We do not want to shutdown since this may cause a new thread to be used if it restarts
+                      //which will break the thread--NioWorker 1-1 relation that we require
+                        //shutdown = true;
                     }
                 } else {
                     shutdown = false;

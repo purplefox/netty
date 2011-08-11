@@ -240,6 +240,7 @@
           </execution>
         </executions>
       </plugin>
+      <!--
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.7.2</version>
@@ -251,6 +252,7 @@
           </excludes>
         </configuration>
       </plugin>
+      -->
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>

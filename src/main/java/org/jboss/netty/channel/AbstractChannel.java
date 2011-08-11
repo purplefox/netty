@@ -248,6 +248,7 @@ public abstract class AbstractChannel implements Channel {
     }
 
     public ChannelFuture write(Object message) {
+        //System.out.println("Writing message " + message.getClass().getName() + " on " + this.getClass().getName());
         return Channels.write(this, message);
     }
 

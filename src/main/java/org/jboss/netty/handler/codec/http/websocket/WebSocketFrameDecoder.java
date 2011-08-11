@@ -70,6 +70,7 @@ public class WebSocketFrameDecoder extends ReplayingDecoder<VoidEnum> {
 
         // Decode a frame otherwise.
         byte type = buffer.readByte();
+
         if ((type & 0x80) == 0x80) {
             // If the MSB on type is set, decode the frame length
             return decodeBinaryFrame(type, buffer);
@@ -100,6 +101,8 @@ public class WebSocketFrameDecoder extends ReplayingDecoder<VoidEnum> {
         if (type == 0xFF && frameSize == 0) {
             receivedClosingHandshake = true;
         }
+
+     // System.out.println("frame size is " + frameSize);
 
         return new DefaultWebSocketFrame(
                 type, buffer.readBytes((int) frameSize));
