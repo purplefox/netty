@@ -138,11 +138,24 @@ public class NioServerSocketChannelFactory implements ServerSocketChannelFactory
         sink = new NioServerSocketPipelineSink(workerExecutor, workerCount);
     }
 
+    public NioServerSocketChannelFactory(Executor bossExecutor, NioWorkerPool workerPool) {
+        if (bossExecutor == null) {
+            throw new NullPointerException("bossExecutor");
+        }
+        this.bossExecutor = bossExecutor;
+        this.workerExecutor = null;
+        sink = new NioServerSocketPipelineSink(workerPool);
+    }
+
     public ServerSocketChannel newChannel(ChannelPipeline pipeline) {
         return new NioServerSocketChannel(this, pipeline, sink);
     }
 
     public void releaseExternalResources() {
-        ExecutorUtil.terminate(bossExecutor, workerExecutor);
+      if (workerExecutor != null) {
+           ExecutorUtil.terminate(bossExecutor, workerExecutor);
+        } else {
+          ExecutorUtil.terminate(bossExecutor);
+      }
     }
 }

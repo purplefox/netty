@@ -57,14 +57,14 @@ class NioServerSocketPipelineSink extends AbstractChannelSink {
     private static final AtomicInteger nextId = new AtomicInteger();
 
     private final int id = nextId.incrementAndGet();
-    private final NioWorker[] workers;
-    private final AtomicInteger workerIndex = new AtomicInteger();
+    private final NioWorkerPool workerPool;
+
+    NioServerSocketPipelineSink(NioWorkerPool workerPool) {
+      this.workerPool = workerPool;
+    }
 
     NioServerSocketPipelineSink(Executor workerExecutor, int workerCount) {
-        workers = new NioWorker[workerCount];
-        for (int i = 0; i < workers.length; i ++) {
-            workers[i] = new NioWorker(id, i + 1, workerExecutor);
-        }
+       workerPool = new NioWorkerPool(workerCount, workerExecutor);
     }
 
     public void eventSunk(
@@ -204,8 +204,7 @@ class NioServerSocketPipelineSink extends AbstractChannelSink {
     }
 
     NioWorker nextWorker() {
-        return workers[Math.abs(
-                workerIndex.getAndIncrement() % workers.length)];
+        return workerPool.nextWorker();
     }
 
     private final class Boss implements Runnable {

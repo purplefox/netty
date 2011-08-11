@@ -58,7 +58,7 @@ import org.jboss.netty.util.internal.LinkedTransferQueue;
  * @version $Rev: 2376 $, $Date: 2010-10-25 03:24:20 +0900 (Mon, 25 Oct 2010) $
  *
  */
-class NioWorker implements Runnable {
+public class NioWorker implements Runnable {
 
     private static final InternalLogger logger =
         InternalLoggerFactory.getInstance(NioWorker.class);
@@ -67,8 +67,6 @@ class NioWorker implements Runnable {
 
     static final int CLEANUP_INTERVAL = 256; // XXX Hard-coded value, but won't need customization.
 
-    private final int bossId;
-    private final int id;
     private final Executor executor;
     private boolean started;
     private volatile Thread thread;
@@ -78,63 +76,64 @@ class NioWorker implements Runnable {
     private final Object startStopLock = new Object();
     private final Queue<Runnable> registerTaskQueue = new LinkedTransferQueue<Runnable>();
     private final Queue<Runnable> writeTaskQueue = new LinkedTransferQueue<Runnable>();
+    private final Queue<Runnable> otherTaskQueue = new LinkedTransferQueue<Runnable>();
     private volatile int cancelledKeys; // should use AtomicInteger but we just need approximation
 
     private final SocketReceiveBufferPool recvBufferPool = new SocketReceiveBufferPool();
     private final SocketSendBufferPool sendBufferPool = new SocketSendBufferPool();
 
-    NioWorker(int bossId, int id, Executor executor) {
-        this.bossId = bossId;
-        this.id = id;
+    NioWorker(Executor executor) {
         this.executor = executor;
     }
 
-    void register(NioSocketChannel channel, ChannelFuture future) {
+    public Thread getThread() {
+      return thread;
+    }
 
+    void start() {
+      synchronized (startStopLock) {
+          if (!started) {
+              // Open a selector if this worker didn't start yet.
+              try {
+                  this.selector = selector = Selector.open();
+              } catch (Throwable t) {
+                  throw new ChannelException(
+                          "Failed to create a selector.", t);
+              }
+
+              // Start the worker thread with the new Selector.
+              boolean success = false;
+              try {
+                  DeadLockProofWorker.start(executor, this);
+                  success = true;
+              } finally {
+                  if (!success) {
+                      // Release the Selector if the execution fails.
+                      try {
+                          selector.close();
+                      } catch (Throwable t) {
+                          logger.warn("Failed to close a selector.", t);
+                      }
+                      this.selector = selector = null;
+                      // The method will return to the caller at this point.
+                  }
+              }
+              started = true;
+          }
+      }
+    }
+
+    void register(NioSocketChannel channel, ChannelFuture future) {
         boolean server = !(channel instanceof NioClientSocketChannel);
         Runnable registerTask = new RegisterTask(channel, future, server);
         Selector selector;
 
         synchronized (startStopLock) {
-            if (!started) {
-                // Open a selector if this worker didn't start yet.
-                try {
-                    this.selector = selector = Selector.open();
-                } catch (Throwable t) {
-                    throw new ChannelException(
-                            "Failed to create a selector.", t);
-                }
-
-                // Start the worker thread with the new Selector.
-                String threadName =
-                    (server ? "New I/O server worker #"
-                            : "New I/O client worker #") + bossId + '-' + id;
-
-                boolean success = false;
-                try {
-                    DeadLockProofWorker.start(
-                            executor, new ThreadRenamingRunnable(this, threadName));
-                    success = true;
-                } finally {
-                    if (!success) {
-                        // Release the Selector if the execution fails.
-                        try {
-                            selector.close();
-                        } catch (Throwable t) {
-                            logger.warn("Failed to close a selector.", t);
-                        }
-                        this.selector = selector = null;
-                        // The method will return to the caller at this point.
-                    }
-                }
-            } else {
-                // Use the existing selector if this worker has been started.
-                selector = this.selector;
-            }
+            start();
+            selector = this.selector;
 
             assert selector != null && selector.isOpen();
 
-            started = true;
             boolean offered = registerTaskQueue.offer(registerTask);
             assert offered;
         }
@@ -143,6 +142,35 @@ class NioWorker implements Runnable {
             selector.wakeup();
         }
     }
+
+  public void scheduleOtherTask(Runnable task) {
+
+     final Thread currentThread = Thread.currentThread();
+       final Thread workerThread = thread;
+       if (currentThread != workerThread) {
+         boolean added =  this.otherTaskQueue.offer(task);
+
+         final Selector workerSelector = selector;
+         if (workerSelector != null) {
+             if (wakenUp.compareAndSet(false, true)) {
+                 workerSelector.wakeup();
+             }
+         } else {
+             // A write request can be made from an acceptor thread (boss)
+             // when a user attempted to write something in:
+             //
+             //   * channelOpen()
+             //   * channelBound()
+             //   * channelConnected().
+             //
+             // In this case, there's no need to wake up the selector because
+             // the channel is not even registered yet at this moment.
+         }
+     } else {
+       //We are on worker thread, so just execute now
+       task.run();
+     }
+   }
 
     public void run() {
         thread = Thread.currentThread();
@@ -195,6 +223,7 @@ class NioWorker implements Runnable {
                 }
 
                 cancelledKeys = 0;
+                processOtherTaskQueue();
                 processRegisterTaskQueue();
                 processWriteTaskQueue();
                 processSelectedKeys(selector.selectedKeys());
@@ -245,6 +274,18 @@ class NioWorker implements Runnable {
             }
         }
     }
+
+   private void processOtherTaskQueue() throws IOException {
+     for (;;) {
+         final Runnable task = otherTaskQueue.poll();
+         if (task == null) {
+             break;
+         }
+
+         task.run();
+     }
+   }
+
 
     private void processRegisterTaskQueue() throws IOException {
         for (;;) {

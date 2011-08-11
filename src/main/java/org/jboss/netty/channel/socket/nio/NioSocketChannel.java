@@ -44,7 +44,7 @@ import org.jboss.netty.util.internal.ThreadLocalBoolean;
  * @version $Rev: 2202 $, $Date: 2010-02-23 16:18:58 +0900 (Tue, 23 Feb 2010) $
  *
  */
-class NioSocketChannel extends AbstractChannel
+public class NioSocketChannel extends AbstractChannel
                                 implements org.jboss.netty.channel.socket.SocketChannel {
 
     private static final int ST_OPEN = 0;
@@ -84,6 +84,10 @@ class NioSocketChannel extends AbstractChannel
         this.worker = worker;
         config = new DefaultNioSocketChannelConfig(socket.socket());
     }
+
+   public NioWorker getWorker() {
+      return worker;
+   }
 
     public NioSocketChannelConfig getConfig() {
         return config;

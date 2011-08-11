@@ -379,7 +379,7 @@ public abstract class HttpMessageDecoder extends ReplayingDecoder<HttpMessageDec
         if (msg instanceof HttpResponse) {
             HttpResponse res = (HttpResponse) msg;
             int code = res.getStatus().getCode();
-            if (code < 200) {
+            if (code < 200 && code != 101) {
                 return true;
             }
             switch (code) {
