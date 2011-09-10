@@ -20,7 +20,7 @@ public class NioWorkerPool {
     }
   }
 
-  NioWorker nextWorker() {
+  public NioWorker nextWorker() {
     return workers[Math.abs(workerIndex.getAndIncrement() % workers.length)];
   }
 

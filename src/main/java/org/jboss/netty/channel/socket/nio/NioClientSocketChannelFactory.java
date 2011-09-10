@@ -139,9 +139,15 @@ public class NioClientSocketChannelFactory implements ClientSocketChannelFactory
     sink = new NioClientSocketPipelineSink(bossExecutor, workerPool);
   }
 
+  private volatile NioWorker theWorker;
+
+  public void setWorker(NioWorker theWorker) {
+    this.theWorker = theWorker;
+  }
+
 
   public SocketChannel newChannel(ChannelPipeline pipeline) {
-    return new NioClientSocketChannel(this, pipeline, sink, sink.nextWorker());
+    return new NioClientSocketChannel(this, pipeline, sink, theWorker == null ? sink.nextWorker(): theWorker);
   }
 
    @Override

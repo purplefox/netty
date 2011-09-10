@@ -201,6 +201,7 @@ public abstract class HttpMessageDecoder extends ReplayingDecoder<HttpMessageDec
         case READ_HEADER: {
             State nextState = readHeaders(buffer);
             checkpoint(nextState);
+
             if (nextState == State.READ_CHUNK_SIZE) {
                 // Chunked encoding
                 message.setChunked(true);
