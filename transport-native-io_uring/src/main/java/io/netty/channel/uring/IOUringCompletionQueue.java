@@ -22,7 +22,7 @@ import static io.netty.channel.uring.UserData.decode;
 /**
  * Completion queue implementation for io_uring.
  */
-final class IOUringCompletionQueue {
+public final class IOUringCompletionQueue {
 
     //these offsets are used to access specific properties
     //CQE (https://github.com/axboe/liburing/blob/master/src/include/liburing/io_uring.h#L162)
@@ -63,7 +63,7 @@ final class IOUringCompletionQueue {
      * Returns {@code true} if any completion event is ready to be processed by
      * {@link #process(IOUringCompletionQueueCallback)}, {@code false} otherwise.
      */
-    boolean hasCompletions() {
+    public boolean hasCompletions() {
         return ringHead != PlatformDependent.getIntVolatile(kTailAddress);
     }
 
@@ -71,7 +71,7 @@ final class IOUringCompletionQueue {
      * Process the completion events in the {@link IOUringCompletionQueue} and return the number of processed
      * events.
      */
-    int process(IOUringCompletionQueueCallback callback) {
+    public int process(IOUringCompletionQueueCallback callback) {
         int tail = PlatformDependent.getIntVolatile(kTailAddress);
         int i = 0;
         while (ringHead != tail) {
@@ -95,7 +95,7 @@ final class IOUringCompletionQueue {
     /**
      * Block until there is at least one completion ready to be processed.
      */
-    void ioUringWaitCqe() {
+    public void ioUringWaitCqe() {
         int ret = Native.ioUringEnter(ringFd, 0, 1, Native.IORING_ENTER_GETEVENTS);
         if (ret < 0) {
             throw new RuntimeException("ioUringEnter syscall returned " + ret);

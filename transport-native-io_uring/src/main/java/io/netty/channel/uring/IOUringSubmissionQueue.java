@@ -23,7 +23,7 @@ import static io.netty.channel.uring.UserData.encode;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-final class IOUringSubmissionQueue {
+public final class IOUringSubmissionQueue {
     private static final InternalLogger logger = InternalLoggerFactory.getInstance(IOUringSubmissionQueue.class);
 
     private static final long SQE_SIZE = 64;
@@ -177,11 +177,11 @@ final class IOUringSubmissionQueue {
         return enqueueSqe(Native.IORING_OP_SENDMSG, flags(), 0, fd, msgHdr, 1, 0, extraData);
     }
 
-    boolean addRead(int fd, long bufferAddress, int pos, int limit, short extraData) {
+    public boolean addRead(int fd, long bufferAddress, int pos, int limit, short extraData) {
         return enqueueSqe(Native.IORING_OP_READ, flags(), 0, fd, bufferAddress + pos, limit - pos, 0, extraData);
     }
 
-    boolean addWrite(int fd, long bufferAddress, int pos, int limit, short extraData) {
+    public boolean addWrite(int fd, long bufferAddress, int pos, int limit, short extraData) {
         return enqueueSqe(Native.IORING_OP_WRITE, flags(), 0, fd, bufferAddress + pos, limit - pos, 0, extraData);
     }
 

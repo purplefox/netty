@@ -15,7 +15,7 @@
  */
 package io.netty.channel.uring;
 
-interface IOUringCompletionQueueCallback {
+public interface IOUringCompletionQueueCallback {
     /**
      * Called for a completion event that was put into the {@link IOUringCompletionQueue}.
      */

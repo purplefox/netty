@@ -29,7 +29,7 @@ import java.nio.channels.Selector;
 import java.util.Arrays;
 import java.util.Locale;
 
-final class Native {
+public final class Native {
     private static final InternalLogger logger = InternalLoggerFactory.getInstance(Native.class);
     static final int DEFAULT_RING_SIZE = Math.max(64, SystemPropertyUtil.getInt("io.netty.uring.ringSize", 4096));
     static final int DEFAULT_IOSEQ_ASYNC_THRESHOLD =
@@ -64,60 +64,60 @@ final class Native {
         }
         Socket.initialize();
     }
-    static final int SOCK_NONBLOCK = NativeStaticallyReferencedJniMethods.sockNonblock();
-    static final int SOCK_CLOEXEC = NativeStaticallyReferencedJniMethods.sockCloexec();
-    static final short AF_INET = (short) NativeStaticallyReferencedJniMethods.afInet();
-    static final short AF_INET6 = (short) NativeStaticallyReferencedJniMethods.afInet6();
-    static final int SIZEOF_SOCKADDR_STORAGE = NativeStaticallyReferencedJniMethods.sizeofSockaddrStorage();
-    static final int SIZEOF_SOCKADDR_IN = NativeStaticallyReferencedJniMethods.sizeofSockaddrIn();
-    static final int SIZEOF_SOCKADDR_IN6 = NativeStaticallyReferencedJniMethods.sizeofSockaddrIn6();
-    static final int SOCKADDR_IN_OFFSETOF_SIN_FAMILY =
+    public static final int SOCK_NONBLOCK = NativeStaticallyReferencedJniMethods.sockNonblock();
+    public static final int SOCK_CLOEXEC = NativeStaticallyReferencedJniMethods.sockCloexec();
+    public static final short AF_INET = (short) NativeStaticallyReferencedJniMethods.afInet();
+    public static final short AF_INET6 = (short) NativeStaticallyReferencedJniMethods.afInet6();
+    public static final int SIZEOF_SOCKADDR_STORAGE = NativeStaticallyReferencedJniMethods.sizeofSockaddrStorage();
+    public static final int SIZEOF_SOCKADDR_IN = NativeStaticallyReferencedJniMethods.sizeofSockaddrIn();
+    public static final int SIZEOF_SOCKADDR_IN6 = NativeStaticallyReferencedJniMethods.sizeofSockaddrIn6();
+    public static final int SOCKADDR_IN_OFFSETOF_SIN_FAMILY =
             NativeStaticallyReferencedJniMethods.sockaddrInOffsetofSinFamily();
-    static final int SOCKADDR_IN_OFFSETOF_SIN_PORT = NativeStaticallyReferencedJniMethods.sockaddrInOffsetofSinPort();
-    static final int SOCKADDR_IN_OFFSETOF_SIN_ADDR = NativeStaticallyReferencedJniMethods.sockaddrInOffsetofSinAddr();
-    static final int IN_ADDRESS_OFFSETOF_S_ADDR = NativeStaticallyReferencedJniMethods.inAddressOffsetofSAddr();
-    static final int SOCKADDR_IN6_OFFSETOF_SIN6_FAMILY =
+    public static final int SOCKADDR_IN_OFFSETOF_SIN_PORT = NativeStaticallyReferencedJniMethods.sockaddrInOffsetofSinPort();
+    public static final int SOCKADDR_IN_OFFSETOF_SIN_ADDR = NativeStaticallyReferencedJniMethods.sockaddrInOffsetofSinAddr();
+    public static final int IN_ADDRESS_OFFSETOF_S_ADDR = NativeStaticallyReferencedJniMethods.inAddressOffsetofSAddr();
+    public static final int SOCKADDR_IN6_OFFSETOF_SIN6_FAMILY =
             NativeStaticallyReferencedJniMethods.sockaddrIn6OffsetofSin6Family();
-    static final int SOCKADDR_IN6_OFFSETOF_SIN6_PORT =
+    public static final int SOCKADDR_IN6_OFFSETOF_SIN6_PORT =
             NativeStaticallyReferencedJniMethods.sockaddrIn6OffsetofSin6Port();
-    static final int SOCKADDR_IN6_OFFSETOF_SIN6_FLOWINFO =
+    public static final int SOCKADDR_IN6_OFFSETOF_SIN6_FLOWINFO =
             NativeStaticallyReferencedJniMethods.sockaddrIn6OffsetofSin6Flowinfo();
-    static final int SOCKADDR_IN6_OFFSETOF_SIN6_ADDR =
+    public static final int SOCKADDR_IN6_OFFSETOF_SIN6_ADDR =
             NativeStaticallyReferencedJniMethods.sockaddrIn6OffsetofSin6Addr();
-    static final int SOCKADDR_IN6_OFFSETOF_SIN6_SCOPE_ID =
+    public static final int SOCKADDR_IN6_OFFSETOF_SIN6_SCOPE_ID =
             NativeStaticallyReferencedJniMethods.sockaddrIn6OffsetofSin6ScopeId();
-    static final int IN6_ADDRESS_OFFSETOF_S6_ADDR = NativeStaticallyReferencedJniMethods.in6AddressOffsetofS6Addr();
-    static final int SIZEOF_SIZE_T = NativeStaticallyReferencedJniMethods.sizeofSizeT();
-    static final int SIZEOF_IOVEC = NativeStaticallyReferencedJniMethods.sizeofIovec();
-    static final int IOVEC_OFFSETOF_IOV_BASE = NativeStaticallyReferencedJniMethods.iovecOffsetofIovBase();
-    static final int IOVEC_OFFSETOF_IOV_LEN = NativeStaticallyReferencedJniMethods.iovecOffsetofIovLen();
-    static final int SIZEOF_MSGHDR = NativeStaticallyReferencedJniMethods.sizeofMsghdr();
-    static final int MSGHDR_OFFSETOF_MSG_NAME = NativeStaticallyReferencedJniMethods.msghdrOffsetofMsgName();
-    static final int MSGHDR_OFFSETOF_MSG_NAMELEN = NativeStaticallyReferencedJniMethods.msghdrOffsetofMsgNamelen();
-    static final int MSGHDR_OFFSETOF_MSG_IOV = NativeStaticallyReferencedJniMethods.msghdrOffsetofMsgIov();
-    static final int MSGHDR_OFFSETOF_MSG_IOVLEN = NativeStaticallyReferencedJniMethods.msghdrOffsetofMsgIovlen();
-    static final int MSGHDR_OFFSETOF_MSG_CONTROL = NativeStaticallyReferencedJniMethods.msghdrOffsetofMsgControl();
-    static final int MSGHDR_OFFSETOF_MSG_CONTROLLEN =
+    public static final int IN6_ADDRESS_OFFSETOF_S6_ADDR = NativeStaticallyReferencedJniMethods.in6AddressOffsetofS6Addr();
+    public static final int SIZEOF_SIZE_T = NativeStaticallyReferencedJniMethods.sizeofSizeT();
+    public static final int SIZEOF_IOVEC = NativeStaticallyReferencedJniMethods.sizeofIovec();
+    public static final int IOVEC_OFFSETOF_IOV_BASE = NativeStaticallyReferencedJniMethods.iovecOffsetofIovBase();
+    public static final int IOVEC_OFFSETOF_IOV_LEN = NativeStaticallyReferencedJniMethods.iovecOffsetofIovLen();
+    public static final int SIZEOF_MSGHDR = NativeStaticallyReferencedJniMethods.sizeofMsghdr();
+    public static final int MSGHDR_OFFSETOF_MSG_NAME = NativeStaticallyReferencedJniMethods.msghdrOffsetofMsgName();
+    public static final int MSGHDR_OFFSETOF_MSG_NAMELEN = NativeStaticallyReferencedJniMethods.msghdrOffsetofMsgNamelen();
+    public static final int MSGHDR_OFFSETOF_MSG_IOV = NativeStaticallyReferencedJniMethods.msghdrOffsetofMsgIov();
+    public static final int MSGHDR_OFFSETOF_MSG_IOVLEN = NativeStaticallyReferencedJniMethods.msghdrOffsetofMsgIovlen();
+    public static final int MSGHDR_OFFSETOF_MSG_CONTROL = NativeStaticallyReferencedJniMethods.msghdrOffsetofMsgControl();
+    public static final int MSGHDR_OFFSETOF_MSG_CONTROLLEN =
             NativeStaticallyReferencedJniMethods.msghdrOffsetofMsgControllen();
-    static final int MSGHDR_OFFSETOF_MSG_FLAGS = NativeStaticallyReferencedJniMethods.msghdrOffsetofMsgFlags();
-    static final int POLLIN = NativeStaticallyReferencedJniMethods.pollin();
-    static final int POLLOUT = NativeStaticallyReferencedJniMethods.pollout();
-    static final int POLLRDHUP = NativeStaticallyReferencedJniMethods.pollrdhup();
-    static final int ERRNO_ECANCELED_NEGATIVE = -NativeStaticallyReferencedJniMethods.ecanceled();
-    static final int ERRNO_ETIME_NEGATIVE = -NativeStaticallyReferencedJniMethods.etime();
-    static final byte IORING_OP_POLL_ADD = NativeStaticallyReferencedJniMethods.ioringOpPollAdd();
-    static final byte IORING_OP_TIMEOUT = NativeStaticallyReferencedJniMethods.ioringOpTimeout();
-    static final byte IORING_OP_ACCEPT = NativeStaticallyReferencedJniMethods.ioringOpAccept();
-    static final byte IORING_OP_READ = NativeStaticallyReferencedJniMethods.ioringOpRead();
-    static final byte IORING_OP_WRITE = NativeStaticallyReferencedJniMethods.ioringOpWrite();
-    static final byte IORING_OP_POLL_REMOVE = NativeStaticallyReferencedJniMethods.ioringOpPollRemove();
-    static final byte IORING_OP_CONNECT = NativeStaticallyReferencedJniMethods.ioringOpConnect();
-    static final byte IORING_OP_CLOSE = NativeStaticallyReferencedJniMethods.ioringOpClose();
-    static final byte IORING_OP_WRITEV = NativeStaticallyReferencedJniMethods.ioringOpWritev();
-    static final byte IORING_OP_SENDMSG = NativeStaticallyReferencedJniMethods.ioringOpSendmsg();
-    static final byte IORING_OP_RECVMSG = NativeStaticallyReferencedJniMethods.ioringOpRecvmsg();
-    static final int IORING_ENTER_GETEVENTS = NativeStaticallyReferencedJniMethods.ioringEnterGetevents();
-    static final int IOSQE_ASYNC = NativeStaticallyReferencedJniMethods.iosqeAsync();
+    public static final int MSGHDR_OFFSETOF_MSG_FLAGS = NativeStaticallyReferencedJniMethods.msghdrOffsetofMsgFlags();
+    public static final int POLLIN = NativeStaticallyReferencedJniMethods.pollin();
+    public static final int POLLOUT = NativeStaticallyReferencedJniMethods.pollout();
+    public static final int POLLRDHUP = NativeStaticallyReferencedJniMethods.pollrdhup();
+    public static final int ERRNO_ECANCELED_NEGATIVE = -NativeStaticallyReferencedJniMethods.ecanceled();
+    public static final int ERRNO_ETIME_NEGATIVE = -NativeStaticallyReferencedJniMethods.etime();
+    public static final byte IORING_OP_POLL_ADD = NativeStaticallyReferencedJniMethods.ioringOpPollAdd();
+    public static final byte IORING_OP_TIMEOUT = NativeStaticallyReferencedJniMethods.ioringOpTimeout();
+    public static final byte IORING_OP_ACCEPT = NativeStaticallyReferencedJniMethods.ioringOpAccept();
+    public static final byte IORING_OP_READ = NativeStaticallyReferencedJniMethods.ioringOpRead();
+    public static final byte IORING_OP_WRITE = NativeStaticallyReferencedJniMethods.ioringOpWrite();
+    public static final byte IORING_OP_POLL_REMOVE = NativeStaticallyReferencedJniMethods.ioringOpPollRemove();
+    public static final byte IORING_OP_CONNECT = NativeStaticallyReferencedJniMethods.ioringOpConnect();
+    public static final byte IORING_OP_CLOSE = NativeStaticallyReferencedJniMethods.ioringOpClose();
+    public static final byte IORING_OP_WRITEV = NativeStaticallyReferencedJniMethods.ioringOpWritev();
+    public static final byte IORING_OP_SENDMSG = NativeStaticallyReferencedJniMethods.ioringOpSendmsg();
+    public static final byte IORING_OP_RECVMSG = NativeStaticallyReferencedJniMethods.ioringOpRecvmsg();
+    public static final int IORING_ENTER_GETEVENTS = NativeStaticallyReferencedJniMethods.ioringEnterGetevents();
+    public static final int IOSQE_ASYNC = NativeStaticallyReferencedJniMethods.iosqeAsync();
 
     private static final int[] REQUIRED_IORING_OPS = {
             IORING_OP_POLL_ADD,
@@ -133,11 +133,11 @@ final class Native {
             IORING_OP_RECVMSG
     };
 
-    static RingBuffer createRingBuffer(int ringSize) {
+    public static RingBuffer createRingBuffer(int ringSize) {
         return createRingBuffer(ringSize, DEFAULT_IOSEQ_ASYNC_THRESHOLD);
     }
 
-    static RingBuffer createRingBuffer(int ringSize, int iosqeAsyncThreshold) {
+    public static RingBuffer createRingBuffer(int ringSize, int iosqeAsyncThreshold) {
         long[][] values = ioUringSetup(ringSize);
         assert values.length == 2;
         long[] submissionQueueArgs = values[0];
@@ -170,11 +170,11 @@ final class Native {
         return new RingBuffer(submissionQueue, completionQueue);
     }
 
-    static RingBuffer createRingBuffer() {
+    public static RingBuffer createRingBuffer() {
         return createRingBuffer(DEFAULT_RING_SIZE, DEFAULT_IOSEQ_ASYNC_THRESHOLD);
     }
 
-    static void checkAllIOSupported(int ringFd) {
+    public static void checkAllIOSupported(int ringFd) {
         if (!ioUringProbe(ringFd, REQUIRED_IORING_OPS)) {
             throw new UnsupportedOperationException("Not all operations are supported: "
                     + Arrays.toString(REQUIRED_IORING_OPS));
