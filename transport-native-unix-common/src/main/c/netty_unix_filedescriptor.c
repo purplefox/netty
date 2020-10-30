@@ -95,16 +95,20 @@ static jint netty_unix_filedescriptor_close(JNIEnv* env, jclass clazz, jint fd) 
    return 0;
 }
 
-static jint netty_unix_filedescriptor_open(JNIEnv* env, jclass clazz, jstring path) {
+static jint netty_unix_filedescriptor_openWithFlags(JNIEnv* env, jclass clazz, jstring path, int flags) {
     const char* f_path = (*env)->GetStringUTFChars(env, path, 0);
 
-    int res = open(f_path, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+    int res = open(f_path, flags, 0666);
     (*env)->ReleaseStringUTFChars(env, path, f_path);
 
     if (res < 0) {
         return -errno;
     }
     return res;
+}
+
+static jint netty_unix_filedescriptor_open(JNIEnv* env, jclass clazz, jstring path) {
+    return netty_unix_filedescriptor_openWithFlags(env, clazz, path, O_WRONLY | O_CREAT | O_TRUNC);
 }
 
 static jint netty_unix_filedescriptor_write(JNIEnv* env, jclass clazz, jint fd, jobject jbuffer, jint pos, jint limit) {

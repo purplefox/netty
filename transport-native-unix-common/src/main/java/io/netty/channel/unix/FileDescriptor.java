@@ -183,11 +183,23 @@ public class FileDescriptor {
         return new FileDescriptor(res);
     }
 
+    public static FileDescriptor from(String path, int flags) throws IOException {
+        int res = openWithFlags(checkNotNull(path, "path"), flags);
+        if (res < 0) {
+            throw newIOException("open", res);
+        }
+        return new FileDescriptor(res);
+    }
+
     /**
      * Open a new {@link FileDescriptor} for the given {@link File}.
      */
     public static FileDescriptor from(File file) throws IOException {
         return from(checkNotNull(file, "file").getPath());
+    }
+
+    public static FileDescriptor from(File file, int flags) throws IOException {
+        return from(checkNotNull(file, "file").getPath(), flags);
     }
 
     /**
@@ -226,6 +238,7 @@ public class FileDescriptor {
     }
 
     private static native int open(String path);
+    private static native int openWithFlags(String path, int flags);
     private static native int close(int fd);
 
     private static native int write(int fd, ByteBuffer buf, int pos, int limit);
