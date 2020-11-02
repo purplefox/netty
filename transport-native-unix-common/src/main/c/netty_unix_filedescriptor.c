@@ -95,7 +95,7 @@ static jint netty_unix_filedescriptor_close(JNIEnv* env, jclass clazz, jint fd) 
    return 0;
 }
 
-static jint netty_unix_filedescriptor_openWithFlags(JNIEnv* env, jclass clazz, jstring path, int flags) {
+static jint netty_unix_filedescriptor_openWithFlags(JNIEnv* env, jclass clazz, jstring path, jint flags) {
     const char* f_path = (*env)->GetStringUTFChars(env, path, 0);
 
     int res = open(f_path, flags, 0666);
@@ -108,7 +108,7 @@ static jint netty_unix_filedescriptor_openWithFlags(JNIEnv* env, jclass clazz, j
 }
 
 static jint netty_unix_filedescriptor_open(JNIEnv* env, jclass clazz, jstring path) {
-    return netty_unix_filedescriptor_openWithFlags(env, clazz, path, O_WRONLY | O_CREAT | O_TRUNC);
+    return netty_unix_filedescriptor_openWithFlags(env, clazz, path, O_RDWR | O_CREAT);
 }
 
 static jint netty_unix_filedescriptor_write(JNIEnv* env, jclass clazz, jint fd, jobject jbuffer, jint pos, jint limit) {
@@ -271,6 +271,7 @@ static jlong netty_unix_filedescriptor_newPipe(JNIEnv* env, jclass clazz) {
 static const JNINativeMethod method_table[] = {
   { "close", "(I)I", (void *) netty_unix_filedescriptor_close },
   { "open", "(Ljava/lang/String;)I", (void *) netty_unix_filedescriptor_open },
+  { "openWithFlags", "(Ljava/lang/String;I)I", (void *) netty_unix_filedescriptor_openWithFlags },
   { "write", "(ILjava/nio/ByteBuffer;II)I", (void *) netty_unix_filedescriptor_write },
   { "writeAddress", "(IJII)I", (void *) netty_unix_filedescriptor_writeAddress },
   { "writevAddresses", "(IJI)J", (void *) netty_unix_filedescriptor_writevAddresses },

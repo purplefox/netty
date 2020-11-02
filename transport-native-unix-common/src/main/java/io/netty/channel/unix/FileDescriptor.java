@@ -37,6 +37,19 @@ public class FileDescriptor {
     private static final AtomicIntegerFieldUpdater<FileDescriptor> stateUpdater =
             AtomicIntegerFieldUpdater.newUpdater(FileDescriptor.class, "state");
 
+    public static final int O_RDONLY = 00000000;
+    public static final int O_WRONLY = 00000001;
+    public static final int O_RDWR = 00000002;
+
+    public static final int O_CREAT = 00000100;
+    public static final int O_EXCL = 00000200;
+    public static final int O_TRUNC = 00001000;
+    public static final int O_APPEND = 00002000;
+    public static final int O_NONBLOCK = 00004000;
+    public static final int O_DSYNC = 00010000;
+    public static final int O_FASYNC = 00020000;
+    public static final int O_DIRECT = 00040000;
+
     private static final int STATE_CLOSED_MASK = 1;
     private static final int STATE_INPUT_SHUTDOWN_MASK = 1 << 1;
     private static final int STATE_OUTPUT_SHUTDOWN_MASK = 1 << 2;
